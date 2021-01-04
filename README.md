@@ -60,7 +60,7 @@ Token Info
 
 
 ## Requirements
-* You have to create a own application to use the strava API. Please follow the [official instructions](http://developers.strava.com/docs/getting-started/) and make sure that you agree with their ToS and API Agreement.
+* You have to create a own application to use the strava API. Please follow the [official instructions](http://developers.strava.com/docs/getting-started/) and make sure that you and your usage of this project agree with their ToS and API Agreement.
 * In order to use this project I would strongly recommend to use Docker.
 
 ## Getting Started
@@ -76,7 +76,7 @@ CLIENT_SECRET=_yourclientsecret(like as1231asdfasd9)_
 
 ## How it Works
 After oauth2 authentication to your application a initialization step is conducted querying all your data from the in the configuration specified years (defaults to 2018, 2019, 2020). This might take several hours as the application does a lot of waiting to not conflict with the API limits. You might want the use less conservative settings changing the configuration parameters.
-After initialization hourly it is checked if new data is available from strava. If so it will automatically be added to your Database.
+After initialization it is checked hourly if new data is available from strava. If so it will automatically be added to your Database.
 
 ## Further Information
 When running the application the first time you need to use oauth2 to provide your application access. Follow the instructions given.
