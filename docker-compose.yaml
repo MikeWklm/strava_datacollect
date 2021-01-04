@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  strava-datacollect:
+    image: "strava-datacollect"
+    container_name: "strava-datacollect"
+    build: .
+    volumes:
+      - strava-database:/myapp/storage # change here to local filepath
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+
+volumes: # remove this then
+  strava-database:

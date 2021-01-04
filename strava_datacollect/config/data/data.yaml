@@ -1,0 +1,7 @@
+# @package _group_
+
+ACTIVITIES_RAW:
+  DATES: ["last_update"]
+
+ACTIVITIES_META:
+  DATES: ["start_date_local", "last_update"]

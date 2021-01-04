@@ -1,0 +1,12 @@
+defaults:
+  - strava: api
+  - hydra/job_logging: custom
+  - hydra: settings
+  - data: data
+
+DB:
+  _target_: strava_datacollect.utils.base.make_path
+  pth: "storage/db.sqlite"
+
+TO_DB: true
+INIT_YEARS: [2018, 2019, 2020]

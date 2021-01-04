@@ -1,0 +1,10 @@
+# @package _group_
+
+version: 1
+handlers:
+  nolog:
+    class: logging.NullHandler
+root:
+  handlers: [nolog]
+
+disable_existing_loggers: false

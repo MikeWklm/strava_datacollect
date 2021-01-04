@@ -1,0 +1,46 @@
+# @package _name_
+
+BASE_URL: "https://www.strava.com/api/v3"
+OAUTH_BASE_URL: "https://www.strava.com/oauth/authorize"
+TOKEN_EXCHANGE_URL: "https://www.strava.com/oauth/token"
+FETCH_TOKEN: true
+CLIENT_ID: ${env:CLIENT_ID}
+CLIENT_SECRET: ${env:CLIENT_SECRET}
+REDIRECT_URI: "https://localhost"
+SCOPE: "read,read_all,activity:read_all,activity:read"
+AUTH_RESPONSE: ???
+SLEEP: 30
+STREAMS:
+  [
+    "time",
+    "distance",
+    "latlng",
+    "altitude",
+    "velocity_smooth",
+    "heartrate",
+    "cadence",
+    "watts",
+    "temp",
+    "moving",
+    "grade_smooth",
+  ]
+TO_GET:
+  [
+    "device_name",
+    "distance",
+    "moving_time",
+    "elapsed_time",
+    "total_elevation_gain",
+    "type",
+    "start_date_local",
+    "average_speed",
+    "max_speed",
+    "average_cadence",
+    "average_watts",
+    "weighted_average_watts",
+    "kilojoules",
+    "device_watts",
+    "has_heartrate",
+    "calories",
+    "max_watts",
+  ]
