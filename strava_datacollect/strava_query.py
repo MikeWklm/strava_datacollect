@@ -20,6 +20,20 @@ from strava_datacollect.utils.data import (TokenStatus, last_update,
 
 @hydra.main(config_path='config', config_name='config')
 def initialize_database(cfg: DictConfig):
+    """initializes the database by checking for
+    the defined years which activities are available.
+    Then firstly the metadata and second the rawdata
+    is queried from strava api.
+
+    It is checked via whether or not the data (mata or raw)
+    is already available
+
+    Args:
+        cfg (DictConfig): configuration
+
+    Returns:
+        [type]: cancel command to schedule (basically None)
+    """
     ids = set()
     for year in tqdm(cfg.INIT_YEARS, 'Iterating Years'):
         from_ = datetime.fromisoformat(f'{year}-01-01')
@@ -43,6 +57,12 @@ def initialize_database(cfg: DictConfig):
 
 @hydra.main(config_path='config', config_name='config')
 def update_meta(cfg: DictConfig) -> None:
+    """updates the metadata by looking at the last 
+    activtiy and checking if since then new data is available
+
+    Args:
+        cfg (DictConfig): configuration
+    """
     from_ = last_update(cfg, 'ACTIVITIES_META', 'start_date_local')
     new_ids = get_activtiy_ids(cfg, from_)
     avail_ids = get_avail_ids(cfg, 'ACTIVITIES_META')
@@ -53,6 +73,12 @@ def update_meta(cfg: DictConfig) -> None:
 
 @hydra.main(config_path='config', config_name='config')
 def update_raw(cfg: DictConfig) -> None:
+    """Updates rawdata based on ids in meta which
+    are not in raw (so reun udpate_meta always first)
+
+    Args:
+        cfg (DictConfig): configuration
+    """
     meta_ids = get_avail_ids(cfg, 'ACTIVITIES_META')
     raw_ids = get_avail_ids(cfg, 'ACTIVITIES_RAW')
     new_ids = meta_ids.difference(raw_ids)
@@ -61,6 +87,7 @@ def update_raw(cfg: DictConfig) -> None:
 
 
 def get_avail_ids(cfg: DictConfig, table: str) -> Set[int]:
+    # util function to get all available ids in a table
     query = f"""
     SELECT id
     FROM 
@@ -76,6 +103,16 @@ def get_avail_ids(cfg: DictConfig, table: str) -> Set[int]:
 
 def get_activtiy_ids(cfg: DictConfig,
                      from_: datetime, to_: Optional[datetime] = save_datetime_now()) -> Set[int]:
+    """get activty ids from strava in a given timeperiod
+
+    Args:
+        cfg (DictConfig): config
+        from_ (datetime): start time
+        to_ (Optional[datetime], optional): end time. Defaults to save_datetime_now().
+
+    Returns:
+        Set[int]: ids in this timeperiod
+    """
     # convert times to epochtime
     from_ = int(from_.timestamp())
     to_ = int(to_.timestamp())
@@ -90,6 +127,15 @@ def get_activtiy_ids(cfg: DictConfig,
 
 
 def get_activity_metadata(cfg: DictConfig, id: int) -> Dict[str, Any]:
+    """query metadata from strava api for a given
+
+    Args:
+        cfg (DictConfig): [description]
+        id (int): activity id
+
+    Returns:
+        Dict[str, Any]: activity data
+    """
     # get metadata
     with MySession(cfg) as session:
         meta = session.get(cfg.api.BASE_URL+f'/activities/{id}')
@@ -118,6 +164,15 @@ def get_activity_metadata(cfg: DictConfig, id: int) -> Dict[str, Any]:
 
 
 def get_activity_rawdata(cfg: DictConfig, id: int) -> pd.DataFrame:
+    """query rawdata from strava api for a given id
+
+    Args:
+        cfg (DictConfig): configuration
+        id (int): activity id
+
+    Returns:
+        pd.DataFrame: activity rawdata
+    """
     # get streams from activity
     with MySession(cfg) as session:
         stream = session.get(

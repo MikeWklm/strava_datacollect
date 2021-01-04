@@ -15,6 +15,17 @@ fetch_token_once = do_only_once(fetch_token)
 
 @hydra.main(config_path='config', config_name='config')
 def main(cfg: DictConfig):
+    """main method for this application
+
+    schedules different activities:
+    make oauth if no token available (once)
+    refresh token of token expired (once)
+    initialize the database (once)
+    hourly query new meta and rawdata
+
+    Args:
+        cfg (DictConfig): configuration
+    """
     token_status = get_token_status(cfg)
     if token_status == TokenStatus.NO_TOKEN:
         cfg.api.AUTH_RESPONSE = get_response_url(cfg)

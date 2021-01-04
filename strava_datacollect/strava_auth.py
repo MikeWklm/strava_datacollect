@@ -17,6 +17,14 @@ from strava_datacollect.utils.base import save_datetime_now
 
 @hydra.main(config_path='config', config_name='config')
 def fetch_token(cfg: DictConfig) -> pd.DataFrame:
+    """fetches token from strava api
+
+    Args:
+        cfg (DictConfig): configuration
+
+    Returns:
+        pd.DataFrame: the updated token
+    """
     oauth = OAuth2Session(client_id=cfg.api.CLIENT_ID,
                           scope=cfg.api.SCOPE, redirect_uri=cfg.api.REDIRECT_URI)
     token = oauth.fetch_token(cfg.api.TOKEN_EXCHANGE_URL,
@@ -29,6 +37,14 @@ def fetch_token(cfg: DictConfig) -> pd.DataFrame:
 
 @hydra.main(config_path='config', config_name='config')
 def get_auth_url(cfg: DictConfig) -> str:
+    """get authorization url from strava
+
+    Args:
+        cfg (DictConfig): configuration
+
+    Returns:
+        str: authorization url
+    """
     oauth = OAuth2Session(client_id=cfg.api.CLIENT_ID,
                           scope=cfg.api.SCOPE,
                           redirect_uri=cfg.api.REDIRECT_URI)
@@ -51,6 +67,14 @@ def get_response_url(cfg: DictConfig) -> str:
 
 @hydra.main(config_path='config', config_name='config')
 def refresh_token(cfg: DictConfig) -> str:
+    """get a new refresh token
+
+    Args:
+        cfg (DictConfig): configuration
+
+    Returns:
+        str: the updated token
+    """
     refresh_token = get_latest(cfg, ['refresh_token'])['refresh_token']
     data = {
         'client_id': cfg.api.CLIENT_ID,
